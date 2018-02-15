@@ -1,0 +1,18 @@
+{
+  "name": "farmer-retailer",
+  "version": "1.0.0",
+  "description": "Its a farmer retailer engagement app where farmers can directly sell their crops to the retailers at the most apt prices without involving any middlemen.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Swati, Lokesh",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "express": "^4.16.2",
+    "express-promise-router": "^3.0.1",
+    "mongoose": "^4.13.9"
+  }
+}
