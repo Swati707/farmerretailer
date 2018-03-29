@@ -10,8 +10,12 @@ var path = require('path');
 var app = express();
 
 //connect to mongoDB
-mongoose.connect('mongodb://localhost:27017/farmerretailer', 
+mongoose.connect('mongodb://lokesh:lokesh@ds121599.mlab.com:21599/farmer-retailer', 
             {useMongoClient: true, server: { poolSize: 5 }});
+// mongoose.connect('mongodb://localhost:27017/farmerretailer', 
+//             {useMongoClient: true, server: { poolSize: 5 }});
+// mongoose.connect('mongodb://localhost:27017/farmerretailer', 
+//             {useMongoClient: true, server: { poolSize: 5 }});
 
 //on connection
 mongoose.connection.on('connected', ()=>{
@@ -29,24 +33,35 @@ app.use(cors());
 app.use(bodyparser.json());
 
 //static files
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'frontend/public')));
 
 //routes
-const route = require('./routes/route');
-const users_route = require('./routes/users');
+// const route = require('./backend/routes/route');
+const api_route = require('./backend/routes/api');
 
-app.use('/users', users_route);
-app.use('/signup', route);
+app.use('/api', api_route);
+// app.use('/signup', route);
 
 //testing server
-app.get('/', function(req, res){
-    console.log("at homepage");
-    // res.send('<p>foobarjgrt,bf</p>');
+// app.get('/', function(req, res){
+//     console.log("at homepage");
+// });
+
+app.get('/',(req,res,next)=>{
+    console.log(res);
+    res.sendFile(path.join(__dirname,'frontend/public/index.html'));
+    // res.status(200).json({
+    //     messsage:"You requested Home page"
+    // })
 });
 
+app.get('*',(req,res)=>{
+    res.sendFile(path.join(__dirname,'frontend/src/index.html'));
+})
+
 //initiating the server
-const port = app.get('port') || 3000;
+const port = process.env.PORT || app.get('port') || 3000;
 
 app.listen(port, ()=>{
-    console.log("server started at port: "+port);
+    console.log("server started at port: " + port);
 });

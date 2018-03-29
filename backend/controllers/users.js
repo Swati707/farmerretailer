@@ -50,16 +50,15 @@ module.exports = {
             account_info_id: req.body.account_info_id,
             card_info_id: req.body.card_info_id
         });
-        var farmer = await newFarmer.save();
+        let farmer = await newFarmer.save();
         farmer = farmer.populate({path: "user_id", model: "User"}, (err) => {
             if(err){
                 console.log("Error while populating");
                 res.json({error: err});
             } else {
-                res.json({msg: "Farmer created successfully", farmer_details: farmer});
+                res.status(201).json({msg: "Farmer created successfully", farmer_details: farmer});
             }
         });
-        // res.json({msg: "Farmer created successfully", farmer_details: farmer});
     },
 
     getRetailers: async (req, res, next)=>{
@@ -97,11 +96,17 @@ module.exports = {
             email: req.body.email,
             phone: req.body.phone,
             address: req.body.address,
-            date_of_birth: req.body.date_of_birth,
-            card_info_id: req.body.card_info_id
+            date_of_birth: req.body.date_of_birth
         });
-        const retailer = await newRetailer.save();
-        res.json({msg: "retailer created successfully", retailer_details: retailer});
+        let retailer = await newRetailer.save();
+        retailer = retailer.populate({path: "user_id", model: "User"}, (err) => {
+            if(err){
+                console.log("Error while populating");
+                res.json({error: err});
+            } else {
+                res.status(201).json({msg: "retailer created successfully", retailer_details: retailer});
+            }
+        });
     },
 
     addCard: async (req, res, next)=>{
@@ -110,10 +115,23 @@ module.exports = {
         console.log(retailer);
         const card = new RetailerCardInfo(req.body);
         card.retailer_id = retailer;
-        const saved_card = await card.save();
+        let saved_card = await card.save();
+        saved_card = saved_card.populate({path: "retailer_id", model: "Retailer"}, (err) => {
+            if(err){
+                console.log("Error while populating the card");
+                res.json({err: err});
+            }
+        });
         retailer.card_info_id.push(saved_card);
         retailer = await retailer.save();
-        res.status(201).json({msg: "card added successfully", card_details: saved_card, retailer_details: retailer});
+        retailer = retailer.populate({path: "card_info_id", model: "RetailerCardInfo"}, (err) => {
+            if(err) {
+                console.log("Error populating retailer's carf info");
+                res.json({err: err});
+            } else {
+                res.status(201).json({msg: "card added successfully", card_details: saved_card, retailer_details: retailer});
+            }
+        })
     },
 
     removeCard: async (req, res, next)=>{
@@ -125,6 +143,33 @@ module.exports = {
         await card.save();
         retailer = await retailer.save();
         res.status(201).json({msg: "card removed successfully", retailer_details: retailer});
+    },
+
+    getCard: async (req, res, next) => {
+        const {retailer_id} = req.params;
+        let retailer = await Retailer.findById(retailer_id);
+        retailer = retailer.populate({path: "card_info_id", model: "RetailerCardInfo"}, (err) => {
+            if(err){
+                console.log("Error while populating card info");
+                res.json({err: err});
+            } else {
+                let cards = retailer.card_info_id;
+                res.status(201).json(cards);
+            }
+        });
+    },
+
+    getOneCard: async (req, res, next) => {
+        const {card_id} = req.params;
+        let card = await RetailerCardInfo.findById(card_id);
+        card = card.populate({path: "retailer_id", model: "Retailer"}, (err) => {
+            if(err){
+                console.log("Error while populating card info");
+                res.json({err: err});
+            } else {
+                res.status(201).json(card);
+            }
+        });
     },
 
     getAdministrators: async (req, res, next)=>{
@@ -156,8 +201,15 @@ module.exports = {
             date_of_birth: req.body.date_of_birth,
             admin_type: req.body.admin_type
         });
-        const administrator = await newAdministrator.save();
-        res.json({msg: "administrator created successfully", administrator_details: administrator});
+        let administrator = await newAdministrator.save();
+        administrator = administrator.populate({path: "user_id", model: "User"}, (err) => {
+            if(err){
+                console.log("Error while populating");
+                res.json({error: err});
+            } else {
+                res.status(201).json({msg: "administrator created successfully", administrator_details: administrator});
+            }
+        })
     },
 
     loginUser: async (req, res, next)=>{
@@ -165,6 +217,7 @@ module.exports = {
             user_name: req.user_name,
             password: req.password
         };
+        console.log(user.user_name);
         const found_user = await User.findOne({user_name: user.user_name});
         console.log("Found the user");
         if(found_user.user_type == "1"){

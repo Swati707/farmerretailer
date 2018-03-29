@@ -4,6 +4,8 @@
   "description": "Its a farmer retailer engagement app where farmers can directly sell their crops to the retailers at the most apt prices without involving any middlemen.",
   "main": "index.js",
   "scripts": {
+    "build": "cd frontend && ng build --prod && cd ..",
+    "start": "node index",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Swati, Lokesh",
