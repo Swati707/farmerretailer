@@ -1,0 +1,12 @@
+STEP 1:
+name
+age
+gender
+address: village, city/town, state, pin
+aadhar no
+contact: 
+	mobile number1, mobile number2
+	
+STEP 2:
+Type of farming: Dairy farming, plantation farming, ley farming, horticulture, shifting cultivation, irrigation farming, other (input field)
+crops produced: rice, wheat, pulses, potato, tomato, mango, apple, litchi, other (input field)
