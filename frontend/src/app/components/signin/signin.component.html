@@ -44,7 +44,7 @@
             <span class="input-group-addon">
               <i class="fa fa-user"></i>
             </span>
-            <input type="text" class="form-control" name="username" placeholder="email address">
+            <input type="text" class="form-control" name="username" placeholder="Username" [(ngModel)]="username">
           </div>
           <span class="help-block"></span>
 
@@ -52,10 +52,10 @@
             <span class="input-group-addon">
               <i class="fa fa-lock"></i>
             </span>
-            <input type="password" class="form-control" name="password" placeholder="Password">
+            <input type="password" class="form-control" name="password" placeholder="Password" [(ngModel)]="password">
           </div>
           <span> .</span>
-          <button class="btn btn-lg btn-primary btn-block" (click)="redirect()" >Login</button>
+          <button class="btn btn-lg btn-primary btn-block" (click)="onLoginSubmit()">Login</button>
         </form>
       </div>
     </div>
